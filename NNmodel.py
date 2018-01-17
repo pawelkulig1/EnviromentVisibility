@@ -76,7 +76,9 @@ model.add(Dense(3, input_dim=2000, activation="sigmoid"))
 model.compile(loss="mean_squared_error", optimizer="adam", metrics=['binary_accuracy'])
 
 model.fit(dataForNN, y, epochs = 50, verbose=1)
-print(model.predict(dataForNN).round())
+
+pickle.
+print(model.predict().round())
 
 
 
