@@ -11,7 +11,7 @@ outputData = pickle.load(open("data.pickle", "rb")) #average outData
 mariackiFrames = pickle.load(open("mariackiFrames.pickle", "rb"))
 wojciechFrames = pickle.load(open("wojciechFrames.pickle", "rb"))
 
-print(outputData[0])
+# print(outputData[0])
 
 #data stored in mariackiFrames[frameNumber][rowNumber][pixelNumber]
 
@@ -27,19 +27,45 @@ for i in range(len(wojciechFrames)):
 print(len(dataForNN), len(dataForNN[0]))
 
 y = []
+
+print("calculating means...")
+def calculateMean(arr, count, poz):
+    s = 0
+    if len(arr) < count:
+        count = len(arr)-1
+
+    for i in range(count):
+        s += arr[poz-i]
+
+    return s/count
+
+average = 50
+
 for i in range(len(outputData[0])):
-	if (outputData[0][i]+outputData[1][i])/2 <0.1:
-		y.append([1,0,0])
-	elif (outputData[0][i]+outputData[1][i])/2 <0.15:
+	calculation = (calculateMean(dataForNN[0], average, i) + calculateMean(dataForNN[1], average, i))/2
+	if calculation >0.15:
+		y.append([0,0,1])
+	elif calculation > 0.8:
 		y.append([0,1,0])
 	else:
-		y.append([0,0,1])
+		y.append([1,0,0])
+
+# for i in range(len(outputData[0])):
+	
+# 	if (outputData[0][i]+outputData[1][i])/2 <0.05:
+# 		y.append([1,0,0])
+# 	elif (outputData[0][i]+outputData[1][i])/2 <0.1:
+# 		y.append([0,1,0])
+# 	else:
+# 		y.append([0,0,1])
 
 y_test = np.array(y[:-100], "float32")
 y = np.array(y[:-100], "float32")
 
 test_data = np.array(dataForNN[:-100], "float32")
 dataForNN = np.array(dataForNN[:-100], "float32")
+
+print("building model...")
 
 #NN MODEL NOW
 model = Sequential()
@@ -49,7 +75,7 @@ model.add(Dense(3, input_dim=2000, activation="sigmoid"))
 
 model.compile(loss="mean_squared_error", optimizer="adam", metrics=['binary_accuracy'])
 
-model.fit(dataForNN, y, epochs = 500, verbose=1)
+model.fit(dataForNN, y, epochs = 50, verbose=1)
 print(model.predict(dataForNN).round())
 
 
