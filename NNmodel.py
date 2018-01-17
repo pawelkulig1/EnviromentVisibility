@@ -19,12 +19,12 @@ dataForNN = []
 
 print("concatenating...")
 for i in range(len(wojciechFrames)):
-	dataForNN.append(np.concatenate((mariackiFrames[i], wojciechFrames[i]), axis=0))
+    dataForNN.append(np.concatenate((mariackiFrames[i], wojciechFrames[i]), axis=0))
 
-		# dataForNN.append(mariackiFrames[i][j] + wojciechFrames[i][j])
+        # dataForNN.append(mariackiFrames[i][j] + wojciechFrames[i][j])
 
 
-print(len(dataForNN), len(dataForNN[0]))
+print(len(outputData[0]), len(dataForNN), len(dataForNN[0]))
 
 y = []
 
@@ -35,6 +35,7 @@ def calculateMean(arr, count, poz):
         count = len(arr)-1
 
     for i in range(count):
+        # print(poz, i)
         s += arr[poz-i]
 
     return s/count
@@ -42,22 +43,22 @@ def calculateMean(arr, count, poz):
 average = 50
 
 for i in range(len(outputData[0])):
-	calculation = (calculateMean(dataForNN[0], average, i) + calculateMean(dataForNN[1], average, i))/2
-	if calculation >0.15:
-		y.append([0,0,1])
-	elif calculation > 0.8:
-		y.append([0,1,0])
-	else:
-		y.append([1,0,0])
+    calculation = (calculateMean(outputData[0], average, i) + calculateMean(outputData[1], average, i))/2
+    if calculation >0.15:
+        y.append([0,0,1])
+    elif calculation > 0.08:
+        y.append([0,1,0])
+    else:
+        y.append([1,0,0])
 
 # for i in range(len(outputData[0])):
-	
-# 	if (outputData[0][i]+outputData[1][i])/2 <0.05:
-# 		y.append([1,0,0])
-# 	elif (outputData[0][i]+outputData[1][i])/2 <0.1:
-# 		y.append([0,1,0])
-# 	else:
-# 		y.append([0,0,1])
+    
+#   if (outputData[0][i]+outputData[1][i])/2 <0.05:
+#       y.append([1,0,0])
+#   elif (outputData[0][i]+outputData[1][i])/2 <0.1:
+#       y.append([0,1,0])
+#   else:
+#       y.append([0,0,1])
 
 y_test = np.array(y[:-100], "float32")
 y = np.array(y[:-100], "float32")
@@ -77,7 +78,7 @@ model.compile(loss="mean_squared_error", optimizer="adam", metrics=['binary_accu
 
 model.fit(dataForNN, y, epochs = 50, verbose=1)
 
-pickle.
+#pickle.
 print(model.predict().round())
 
 
